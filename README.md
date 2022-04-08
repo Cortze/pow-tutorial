@@ -40,9 +40,18 @@ Por ejemplo, si Leo quiere enviar 10 ETH a Mikel, debemos asegurarnos que Leo po
 
 Donde `XXXXX.json` define el fichero de donde leer la lista de balances actuales de cada persona.
 
+### Instrucciones
+
+
+Existe una función que importa los balances de las distintas personas que participarán en la simulación
+
+1. Se debe importar este fichero y pasarselo a las funciones a rellenar
+2. La función Transaction.valid() revisará que la operación es correcta.
+3. La función Block.check_valid_transations() debera iterar sobre todas las transacciones y revisar cada una de ellas.
+4. Por último deberemos revisar que las transacciones son correctas antes de dar el bloque por válido.
 
 #### Lista de funciones a completar
 
-1. Transaction.valid()
+1. Transaction.valid() 
 2. Block.check_valid_transactions()
 3. Implement transaction check in calculate_valid_block()
