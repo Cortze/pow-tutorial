@@ -142,6 +142,22 @@ class Block():
         hash = int('0x'+hash.hexdigest(), 0)
         hash = 0xFFFFFFFFFFFF & hash   
         return hash
+    
+    
+    def check_valid_transactions(self, balances):
+        ## Ejercicio 2
+        """
+        Esta función debe iterar sobre la lista de transacciones del bloque y revisar que son válidas.
+        En caso de que una transacción no sea válida se debe retornar Falso.
+        En cualquier otro caso se debe retornar Verdadero.
+        """
+        balances_copy = balances.copy()
+        ## --- Espacio para rellenar ---
+        
+
+        ## --- Fin de espacio ---
+
+        return True
 
 class Transaction():
     t_from = ""
@@ -154,8 +170,13 @@ class Transaction():
         self.t_amount = t_amount
     
     # TODO: Could be nice to implement something like that to see if they are valid
-    def valid(self):
+    def valid(self, input_balances):
+        ## Ejercicio 2
         """
+        Esta función debe revisar que la transacción es válida teniendo en cuenta el diccionario de balances que 
+        se recibe por argumentos.
+        Una transacción es válida siempre "t_from" tiene fondos suficientes en "input_balances" para traspasar "t_amount".
+        La función retorna Verdadero en caso de que la transacción sea válida, y Falso en caso de que no.
         """
 
         ## --- Espacio para rellenar ---
@@ -170,6 +191,19 @@ class Transaction():
             "to": self.t_to,
             "amount": self.t_amount,
         }
+
+def import_balances(input_file):
+    ## Ejercicio 2
+
+    """
+    This method will import a json containing the balances of the different participants of the blockchain
+    """
+    # read the json file
+    print('loading json file', input_file)
+    f = open(input_file, 'r') # open in read mode
+    data = json.load(f) # load json format
+    print('balances loaded:\n', data)
+    return data
 
 if __name__ == "__main__":
     # parse arguments

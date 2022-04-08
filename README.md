@@ -28,3 +28,39 @@ Y donde `X` es la dificultad que le queremos dar al algoritmo de minado. (Numero
 3. calculate_valid_block()
 
 ## Ejercicios propuestos 2 ( opcionales )
+
+Hasta ahora hemos verificado que el hash del bloque creado está dentro de las restricciones especificadas.
+Sin embargo, también hemos de verificar las transacciones dentro del mismo.
+
+Una transacción solo es válida si existen fondos suficientes para llevarla a cabo.
+Por ejemplo, si Leo quiere enviar 10 ETH a Mikel, debemos asegurarnos que Leo posee 10 ETH no gastados.
+
+1. En la terminal, dentro de la carpeta que contiene el fichero, se ha de ejecutar el siguiente comando:
+`python3 minero.py --input=YYYYYY.json --difficulty=X --balances=XXXXX.json`
+
+Donde `XXXXX.json` define el fichero de donde leer la lista de balances actuales de cada persona.
+
+Ejemplo de balances.json:
+
+```
+{
+    "Leo": 100000000,
+    "Mikel": 10,
+    "Tarun": 10
+}
+```
+
+### Instrucciones
+
+Existe una función que importa los balances de las distintas personas que participarán en la simulación
+
+1. Se debe importar este fichero y pasarselo a las funciones a rellenar
+2. La función Transaction.valid() revisará que la operación es correcta.
+3. La función Block.check_valid_transations() debera iterar sobre todas las transacciones y revisar cada una de ellas.
+4. Por último deberemos revisar que las transacciones son correctas antes de dar el bloque por válido.
+
+#### Lista de funciones a completar
+
+1. Transaction.valid() 
+2. Block.check_valid_transactions()
+3. Implement transaction check in calculate_valid_block()
