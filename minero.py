@@ -12,13 +12,16 @@ def main(args):
     if not args.difficulty:
         print('no dificulty was given')
         exit(0)
-
+    if not args.balances:
+        print('no balances file was given')
+        exit(0)
+    balances = import_balances(args.balances)
     # Generate a block object that later gets filled from given .json file
     block = Block()
     block.import_from_json(args.input)
 
     # Calculate nonce to make the block valid
-    valid_block = calculate_valid_block(block, args.difficulty)
+    valid_block = calculate_valid_block(block, args.difficulty, balances)
     print(valid_block.get_json())
 
 def get_diff_mask(bit_base, diff):
@@ -31,7 +34,7 @@ def get_diff_mask(bit_base, diff):
     return diff_mask
 
 
-def calculate_valid_block(block, diff):
+def calculate_valid_block(block, diff, input_balances):
     """
     Completar los campos que faltan en la función `calculate_valid_block()` de manera que 
     esta devuelva el objeto Block con un valor de `nonce` valido para que el hash del bloque 
@@ -44,6 +47,9 @@ def calculate_valid_block(block, diff):
     1010 & 0101 = 0000
     """
 
+    if not block.check_valid_transactions(input_balances):
+        print('some transaction/s are not valid')
+        exit(0)
     # Get the base mask that will determine if the hash of the block is valid or not 
     diff_mask = get_diff_mask(64, diff)
 
@@ -51,7 +57,7 @@ def calculate_valid_block(block, diff):
 
     h = block.get_hash()
 
-    while (h | diff_mask) != diff_mask:
+    while ((h | diff_mask) != diff_mask):
         block.increase_nonce()
         # force to sleep 5 secs to avoid burning PCs :)
         time.sleep(1)
@@ -143,11 +149,24 @@ class Block():
         hash = int('0x'+hash.hexdigest(), 0)
         hash = 0xFFFFFFFFFFFF & hash   
         return hash
+    
+    def check_valid_transactions(self, balances):
+
+        ## --- Espacio para rellenar ---
+        balances_copy = balances.copy()
+        for transfer in self.transactions:
+            if not transfer.valid(balances_copy):
+                return False
+
+        ## --- Fin de espacio ---
+
+        return True
 
 class Transaction():
     t_from = ""
     t_to = ""
     t_amount = 0
+    balances_db = ""
 
     def __init__(self, t_from, t_to, t_amount):
         self.t_from = t_from
@@ -155,15 +174,28 @@ class Transaction():
         self.t_amount = t_amount
     
     # TODO: Could be nice to implement something like that to see if they are valid
-    def valid(self):
+    def valid(self, input_balances):
         """
+        This method will receive the balances dictionary as an input.
+        Then, it needs to check if all transactions can be executed according to the current balances.
+        It returns true if all transactions can be executed or false if any cannot be executed.
         """
 
         ## --- Espacio para rellenar ---
+
+        if input_balances[self.t_from] < self.t_amount:
+            # if the balance is less than the transfer amount, the transaction is not valid
+            return False
+        
+        # update balances for each person
+        input_balances[self.t_from] = input_balances[self.t_from] - self.t_amount
+        input_balances[self.t_to] = input_balances[self.t_to] + self.t_amount
+        
         
         ## --- Fin de espacio ---
 
         return True
+
 
     def get_json(self):
         return {
@@ -171,6 +203,21 @@ class Transaction():
             "to": self.t_to,
             "amount": self.t_amount,
         }
+    
+    def __str__(self):
+        return str(self.get_json())
+
+def import_balances(input_file):
+
+    """
+    This method will import a json containing the balances of the different participants of the blockchain
+    """
+    # read the json file
+    print('loading json file', input_file)
+    f = open(input_file, 'r') # open in read mode
+    data = json.load(f) # load json format
+    print('balances loaded:\n', data)
+    return data
 
 if __name__ == "__main__":
     # parse arguments
@@ -178,6 +225,8 @@ if __name__ == "__main__":
     parser.add_argument('--input', type=str,
                         help='input file to generate the hash')
     parser.add_argument('--difficulty', type=int, 
-                        help='define the dificulty level of PoW')
+                        help='define the difficulty level of PoW')
+    parser.add_argument('--balances', type=str, 
+                        help='define the balances file')
     args = parser.parse_args()
     main(args)
