@@ -16,7 +16,7 @@ Este algoritmo deberá comprobar que la versión serializada del bloque (`block.
 
 La manera de ejecutar el fichero `minero.py` es la siguiente:
 1. En la terminal, dentro de la carpeta que contiene el fichero, se ha de ejecutar el siguiente comando:
-`python3 hasher.py --input=YYYYYY.json --dificulty=X`
+`python3 hasher.py --input=YYYYYY.json --difficulty=X`
 Donde `YYYYY.json`define el fichero bloque que se quiere minar. (La estructura base del bloque se proporciona en el fichero `bloque_base.json`) 
 Y donde `X` es la dificultad que le queremos dar al algoritmo de minado. (Numero entero entre 1 y 10)
 

@@ -9,8 +9,8 @@ def main(args):
     if not args.input:
         print('no input file was given')
         exit(0)
-    if not args.dificulty:
-        print('no dificulty was given')
+    if not args.difficulty:
+        print('no difficulty was given')
         exit(0)
 
     # Generate a block object that later gets filled from given .json file
