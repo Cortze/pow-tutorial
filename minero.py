@@ -21,6 +21,15 @@ def main(args):
     valid_block = calculate_valid_block(block, args.difficulty)
     print(valid_block.get_json())
 
+def get_diff_mask(bit_base, diff):
+    # fill a variable of '1' and make the variable to shift dif times << so that '11111111000'
+    # apply the mask with an 'OR' comparison and if the result matches de mask, ok!
+    diff_mask = (1 << bit_base) - 1# assuming that int in python is int64
+    diff_mask = diff_mask << diff
+    # bring the len of the mask back to 64 bits
+    diff_mask = 0xFFFFFFFFFFFF & diff_mask
+    return diff_mask
+
 
 def calculate_valid_block(block, diff):
     """
@@ -34,12 +43,9 @@ def calculate_valid_block(block, diff):
     and -> `&`
     1010 & 0101 = 0000
     """
-    # fill a valiable of '1' and make the valiable to shif dif times << so that '11111111000'
-    # apply the mask with an 'OR' comparison and if the result matches de mask, ok!
-    diff_mask = (1 << 64) - 1# assuming that int in python is int32
-    diff_mask = diff_mask << diff
-    # bring the len of the mask back to 64 bits
-    diff_mask = 0xFFFFFFFFFFFF & diff_mask
+
+    # Get the base mask that will determine if the hash of the block is valid or not 
+    diff_mask = get_diff_mask(64, diff)
 
     ## --- Espacio para rellenar ---
 
@@ -106,7 +112,7 @@ class Block():
 
     def increase_nonce(self):
         """
-        Completar la funcion increase_nonce() del objeto Block de manera que se incremente
+        Completar la funcion increase_nonce() de manera que se incremente
         el valor de la variable `nonce` del objeto Block.
         """
         ## --- Espacio para rellenar ---
