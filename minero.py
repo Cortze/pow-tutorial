@@ -9,7 +9,7 @@ def main(args):
     if not args.input:
         print('no input file was given')
         exit(0)
-    if not args.dificulty:
+    if not args.difficulty:
         print('no dificulty was given')
         exit(0)
 
@@ -18,11 +18,11 @@ def main(args):
     block.import_from_json(args.input)
 
     # Calculate nonce to make the block valid
-    valid_block = calculate_valid_block(block, args.dificulty)
-    print(valid_block)
+    valid_block = calculate_valid_block(block, args.difficulty)
+    print(valid_block.get_json())
 
 
-def calculate_valid_block(block, dif):
+def calculate_valid_block(block, diff):
     """
     Completar los campos que faltan en la función `calculate_valid_block()` de manera que 
     esta devuelva el objeto Block con un valor de `nonce` valido para que el hash del bloque 
@@ -36,16 +36,16 @@ def calculate_valid_block(block, dif):
     """
     # fill a valiable of '1' and make the valiable to shif dif times << so that '11111111000'
     # apply the mask with an 'OR' comparison and if the result matches de mask, ok!
-    dif_mask = (1 << 64) - 1# assuming that int in python is int32
-    dif_mask = dif_mask << dif
+    diff_mask = (1 << 64) - 1# assuming that int in python is int32
+    diff_mask = diff_mask << diff
     # bring the len of the mask back to 64 bits
-    dif_mask = 0xFFFFFFFFFFFF & dif_mask
+    diff_mask = 0xFFFFFFFFFFFF & diff_mask
 
     ## --- Espacio para rellenar ---
 
     h = block.get_hash()
 
-    while (h | dif_mask) != dif_mask:
+    while (h | diff_mask) != diff_mask:
         block.increase_nonce()
         # force to sleep 5 secs to avoid burning PCs :)
         time.sleep(1)
@@ -56,9 +56,9 @@ def calculate_valid_block(block, dif):
 
     print('block successfully mined at nonce', block.nonce)
     print('hash hex:         ', hex(h))
-    print('matching mask hex:', hex(dif_mask))
+    print('matching mask hex:', hex(diff_mask))
     print('hash bin:         ', bin(h))
-    print('matching mask bin:', bin(dif_mask))
+    print('matching mask bin:', bin(diff_mask))
 
     return block
 
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PoW example')
     parser.add_argument('--input', type=str,
                         help='input file to generate the hash')
-    parser.add_argument('--dificulty', type=int, 
+    parser.add_argument('--difficulty', type=int, 
                         help='define the dificulty level of PoW')
     args = parser.parse_args()
     main(args)
