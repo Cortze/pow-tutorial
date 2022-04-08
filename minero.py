@@ -34,7 +34,6 @@ def calculate_valid_block(block, dif):
     and -> `&`
     1010 & 0101 = 0000
     """
-
     # fill a valiable of '1' and make the valiable to shif dif times << so that '11111111000'
     # apply the mask with an 'OR' comparison and if the result matches de mask, ok!
     dif_mask = (1 << 64) - 1# assuming that int in python is int32
@@ -44,11 +43,14 @@ def calculate_valid_block(block, dif):
 
     ## --- Espacio para rellenar ---
 
-    
-    while .... :
+    h = block.get_hash()
 
+    while (h | dif_mask) != dif_mask:
+        block.increase_nonce()
+        # force to sleep 5 secs to avoid burning PCs :)
         time.sleep(1)
-        
+        # calculate next hash
+        h = block.get_hash()
  
     ## --- Fin de espacio ---
 
@@ -108,6 +110,7 @@ class Block():
         el valor de la variable `nonce` del objeto Block.
         """
         ## --- Espacio para rellenar ---
+        self.nonce += 1
 
         ## --- Fin de espacio ---
 
@@ -124,6 +127,7 @@ class Block():
         """
 
         ## --- Espacio para rellenar ---
+        hash = hashlib.sha256(self.get_json())
         
         ## --- Fin de espacio ---
 
