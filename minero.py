@@ -151,7 +151,7 @@ class Block():
         En caso de que una transacción no sea válida se debe retornar Falso.
         En cualquier otro caso se debe retornar Verdadero.
         """
-        balances_copy = balances.copy()
+        balances_copy = balances.copy() # hacemos una copia para no modificar la variable original
         ## --- Espacio para rellenar ---
         
 
